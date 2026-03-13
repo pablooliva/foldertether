@@ -23,67 +23,115 @@ if [[ ! -d "$FOLDER_PATH" ]]; then
     exit 1
 fi
 
-# ── 1. Config: read or create ~/.config/foldertether/config ──────────────────
+# ── 1. Config: read or select from ~/.config/foldertether/vaults/ ────────────
 CONFIG_DIR="$HOME/.config/foldertether"
-CONFIG_FILE="$CONFIG_DIR/config"
+VAULTS_DIR="$CONFIG_DIR/vaults"
+LEGACY_CONFIG="$CONFIG_DIR/config"
 
 VAULT_NAME=""
 VAULT_ROOT=""
 
-if [[ -f "$CONFIG_FILE" ]]; then
-    # Source the config file to populate VAULT_NAME and VAULT_ROOT
+mkdir -p "$VAULTS_DIR"
+
+# Migrate legacy single-vault config if present and no vault configs exist yet
+shopt -s nullglob
+conf_files=("$VAULTS_DIR"/*.conf)
+shopt -u nullglob
+
+if [[ ${#conf_files[@]} -eq 0 && -f "$LEGACY_CONFIG" ]]; then
     # shellcheck source=/dev/null
-    . "$CONFIG_FILE"
+    . "$LEGACY_CONFIG"
+    if [[ -n "$VAULT_NAME" && -n "$VAULT_ROOT" ]]; then
+        printf 'VAULT_NAME="%s"\nVAULT_ROOT="%s"\n' "$VAULT_NAME" "$VAULT_ROOT" \
+            > "$VAULTS_DIR/${VAULT_NAME}.conf"
+        mv "$LEGACY_CONFIG" "$LEGACY_CONFIG.migrated"
+    fi
+    VAULT_NAME=""
+    VAULT_ROOT=""
+    shopt -s nullglob
+    conf_files=("$VAULTS_DIR"/*.conf)
+    shopt -u nullglob
+fi
+
+# Prompts for vault name + root path, saves a new .conf file, and sets
+# VAULT_NAME / VAULT_ROOT. Returns 1 if the user cancels either prompt.
+_prompt_new_vault() {
+    local vault_name_input vault_root_input
+    vault_name_input=$(osascript <<'APPLESCRIPT'
+try
+    set r to display dialog "FolderTether: Add a vault." & return & return & "Enter your Obsidian vault name:" default answer "" buttons {"Cancel", "OK"} default button "OK"
+    return text returned of r
+on error number -128
+    return ""
+end try
+APPLESCRIPT
+)
+    [[ -z "$vault_name_input" ]] && return 1
+
+    vault_root_input=$(osascript <<'APPLESCRIPT'
+try
+    set r to display dialog "Enter the full path to your vault root directory:" & return & "(e.g. /Users/you/Documents/Obsidian/Personal)" default answer "" buttons {"Cancel", "OK"} default button "OK"
+    return text returned of r
+on error number -128
+    return ""
+end try
+APPLESCRIPT
+)
+    [[ -z "$vault_root_input" ]] && return 1
+
+    printf 'VAULT_NAME="%s"\nVAULT_ROOT="%s"\n' "$vault_name_input" "$vault_root_input" \
+        > "$VAULTS_DIR/${vault_name_input}.conf"
+    VAULT_NAME="$vault_name_input"
+    VAULT_ROOT="$vault_root_input"
+}
+
+VAULT_COUNT=${#conf_files[@]}
+
+if [[ $VAULT_COUNT -eq 0 ]]; then
+    # No vaults configured — first-run setup
+    _prompt_new_vault || exit 0
+
+elif [[ $VAULT_COUNT -eq 1 ]]; then
+    # Only one vault — use it silently
+    # shellcheck source=/dev/null
+    . "${conf_files[0]}"
+
 else
-    # Config missing — prompt the user for vault name and vault root path.
-    # Wrap each display dialog in try/on error -128 so Cancel returns "" (exit 0)
-    # rather than throwing error -128 and aborting the script under set -e.
-    VAULT_NAME_INPUT=$(osascript <<'APPLESCRIPT'
-try
-    set vaultNameResult to display dialog "FolderTether first-run setup." & return & return & "Enter your Obsidian vault name:" default answer "Personal" buttons {"Cancel", "OK"} default button "OK"
-    return text returned of vaultNameResult
-on error number -128
-    return ""
-end try
+    # Multiple vaults — present a picker
+    as_list=""
+    for conf in "${conf_files[@]}"; do
+        name=$(basename "$conf" .conf)
+        name="${name//\"/\\\"}"
+        as_list="${as_list}\"${name}\", "
+    done
+    as_list="${as_list}\"Add new vault…\""
+
+    chosen=$(osascript <<APPLESCRIPT
+set vaultList to {${as_list}}
+set chosen to choose from list vaultList with prompt "Select a vault for this note:" default items {item 1 of vaultList} without multiple selections allowed and empty selection allowed
+if chosen is false then return ""
+return item 1 of chosen
 APPLESCRIPT
 )
 
-    if [[ -z "$VAULT_NAME_INPUT" ]]; then
-        # User cancelled the vault name prompt
+    if [[ -z "$chosen" ]]; then
         exit 0
+    elif [[ "$chosen" == "Add new vault…" ]]; then
+        _prompt_new_vault || exit 0
+    else
+        # shellcheck source=/dev/null
+        . "$VAULTS_DIR/${chosen}.conf"
     fi
-
-    VAULT_ROOT_INPUT=$(osascript <<'APPLESCRIPT'
-try
-    set vaultRootResult to display dialog "Enter the full path to your vault root directory" & return & "(e.g. /Users/pablo/Documents/Obsidian/Personal):" default answer "" buttons {"Cancel", "OK"} default button "OK"
-    return text returned of vaultRootResult
-on error number -128
-    return ""
-end try
-APPLESCRIPT
-)
-
-    if [[ -z "$VAULT_ROOT_INPUT" ]]; then
-        # User cancelled the vault root prompt
-        exit 0
-    fi
-
-    # Create config directory and write config file
-    mkdir -p "$CONFIG_DIR"
-    printf 'VAULT_NAME="%s"\nVAULT_ROOT="%s"\n' "$VAULT_NAME_INPUT" "$VAULT_ROOT_INPUT" > "$CONFIG_FILE"
-
-    VAULT_NAME="$VAULT_NAME_INPUT"
-    VAULT_ROOT="$VAULT_ROOT_INPUT"
 fi
 
 # ── 2. Validate config values ─────────────────────────────────────────────────
 if [[ -z "$VAULT_NAME" ]]; then
-    osascript -e "display dialog \"FolderTether: VAULT_NAME is missing from config.\n\nPlease edit or delete ~/.config/foldertether/config and run the action again.\" buttons {\"OK\"} default button \"OK\" with icon stop"
+    osascript -e "display dialog \"FolderTether: VAULT_NAME is missing from the selected config.\n\nPlease check or delete the relevant file in ~/.config/foldertether/vaults/ and run the action again.\" buttons {\"OK\"} default button \"OK\" with icon stop"
     exit 1
 fi
 
 if [[ -z "$VAULT_ROOT" ]]; then
-    osascript -e "display dialog \"FolderTether: VAULT_ROOT is missing from config.\n\nPlease edit or delete ~/.config/foldertether/config and run the action again.\" buttons {\"OK\"} default button \"OK\" with icon stop"
+    osascript -e "display dialog \"FolderTether: VAULT_ROOT is missing from the selected config.\n\nPlease check or delete the relevant file in ~/.config/foldertether/vaults/ and run the action again.\" buttons {\"OK\"} default button \"OK\" with icon stop"
     exit 1
 fi
 

@@ -80,19 +80,7 @@ The included Quick Action lets you create a linked note starting from a Finder f
 
 ### Setup
 
-1. Open **Shortcuts.app**.
-2. Create a new shortcut named `FolderTether` (or anything you like).
-3. Add a **Run Shell Script** action:
-   - Shell: `/bin/bash`
-   - Input: **Shortcut Input**
-   - Paste the full contents of `quick-action/folder-tether.sh`
-   - Set **"Receive input from"** → **Finder** → **Folders**
-4. In the shortcut's settings (`ⓘ`), enable **Use as Quick Action → Finder**.
-5. Right-click any folder in Finder → **Quick Actions → FolderTether** to use it.
-
-On first run, the script prompts for your vault name and vault root path and saves them to `~/.config/foldertether/config`. Later runs use the saved config automatically.
-
-To change your vault: edit or delete `~/.config/foldertether/config` and re-run the action.
+See [quick-action/install.md](quick-action/install.md) for full installation instructions.
 
 > The Quick Action requires macOS. The plugin itself works on all Obsidian desktop platforms.
 
