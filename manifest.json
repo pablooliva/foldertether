@@ -1,0 +1,11 @@
+{
+  "id": "folder-tether",
+  "name": "FolderTether",
+  "version": "1.0.0",
+  "minAppVersion": "1.4.0",
+  "description": "Bidirectional links between Obsidian notes and local directories.",
+  "author": "Pablo Oliva",
+  "authorUrl": "",
+  "fundingUrl": "",
+  "isDesktopOnly": true
+}

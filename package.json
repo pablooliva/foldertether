@@ -1,0 +1,25 @@
+{
+  "name": "folder-tether",
+  "version": "1.0.0",
+  "description": "Bidirectional links between Obsidian notes and local directories.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit --skipLibCheck && node esbuild.config.mjs production",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Pablo",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.10",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.21.5",
+    "jest": "^29.7.0",
+    "obsidian": "latest",
+    "ts-jest": "^29.2.2",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.3"
+  }
+}

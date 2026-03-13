@@ -1,0 +1,85 @@
+# ProPal Ethical License
+
+Version 1.0, October 2025
+
+<https://codeberg.org/neveragain/propal-ethical-license>
+
+**Copyright (c) 2026 Pablo Oliva**
+
+## Preamble
+
+This license is designed to ensure that the software is used in accordance with basic principles of human dignity and international humanitarian law. The inclusion of specific prohibitions, such as restrictions on entities with ties to the State of Israel, reflects a commitment to aligning software usage with contemporary human rights frameworks and geopolitical considerations.
+
+## Terms and Conditions
+
+Permission is hereby granted, free of charge, to any person or entity obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+### 1. Ethical Use Obligations
+
+The Software shall not be used by any individual, organization, corporation, or other entity (the "User") that:
+
+#### a) Violates International Human Rights Standards
+
+Engages in conduct that violates the Universal Declaration of Human Rights, the International Covenant on Civil and Political Rights, the International Covenant on Economic, Social and Cultural Rights, or the United Nations Global Compact principles.
+
+#### b) Commits or Supports Genocide
+
+Commits, aids, abets, or materially supports genocide as defined under the Convention on the Prevention and Punishment of the Crime of Genocide (1948), including but not limited to:
+
+- Killing members of a national, ethnic, racial, or religious group
+- Causing serious bodily or mental harm to members of such groups
+- Deliberately inflicting conditions of life calculated to bring about physical destruction of such groups
+- Imposing measures intended to prevent births within such groups
+- Forcibly transferring children of the group to another group
+
+#### c) Implements or Enforces Apartheid
+
+Implements, enforces, or materially supports apartheid as defined under the International Convention on the Suppression and Punishment of the Crime of Apartheid (1973) and the Rome Statute of the International Criminal Court, including but not limited to:
+
+- Systematic oppression and domination by one racial group over another
+- Denial of basic human rights and freedoms to members of a racial group
+- Measures designed to divide the population along racial lines
+- Persecution of persons based on racial discrimination
+
+#### d) Conducts business with Israeli Entities
+
+Conducts business with, provides material support to, or operates within the State of Israel, or maintains business relationships with Israeli companies or government entities.
+
+#### e) Engages in Ethically Unacceptable Practices
+
+Uses the Software to enable law enforcement or government surveillance, forced labor, or environmental harm; collaborates with entities involved in fossil fuel extraction or repressive regimes; or violates human rights through activities such as:
+
+- Surveillance of marginalized communities
+- Exploitation of labor in conflict zones
+- Pollution or resource depletion in ecologically sensitive areas
+- Support for governments engaging in systemic human rights abuses
+
+### 2. Material Support Definition
+
+"Material support" includes but is not limited to:
+
+- Direct financial contributions or investments
+- Provision of goods, services, or technology that enables such violations
+- Active participation in supply chains that support such violations
+- Contractual relationships that directly facilitate such violations
+
+### 3. Determination and Enforcement
+
+Violations may be determined by:
+
+- Findings of the International Court of Justice
+- Findings of the International Criminal Court
+- Determinations by United Nations human rights bodies
+- Well-documented evidence from credible international human rights organizations
+
+### 4. Remedies
+
+Any User found to be in violation of these terms shall immediately cease use of the Software. The copyright holder reserves the right to seek legal remedies for continued use in violation of this license.
+
+### 5. Standard Conditions
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+### 6. Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
